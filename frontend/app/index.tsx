@@ -12,8 +12,7 @@ const index = () => {
         resizeMode='cover'
         style={styles.image}>
 
-      <View style={styles.buttonContainer}>
-        <Button title='Go' onPress={() => router.replace("/login")}/>
+      <View style={styles.activity}>
         <ActivityIndicator size="large"/>
       </View>
       
@@ -31,8 +30,8 @@ const styles = StyleSheet.create({
   logo:{
     width: 100
   },
-  buttonContainer: {
-    top: screenHeight * 0.15
+  activity: {
+    top: screenHeight * 0.10
   }
 })
 
