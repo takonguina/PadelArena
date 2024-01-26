@@ -1,6 +1,10 @@
 import { useRouter, useSegments } from "expo-router";
 import { createContext, useContext, useEffect, useState } from "react";
 
+function sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
 const AuthContext = createContext<any>(null);
 
 export function useAuth(){
@@ -13,13 +17,21 @@ export function AuthProvider({children}: React.PropsWithChildren){
     const [token, setToken] = useState<string | undefined>("");
 
     useEffect(()=> {
-        if (token === undefined) return;
+        const waitandRedirect = async () => {
+            if (rootSegment == undefined){
+                await sleep(2000);
+            }
+            if (token === undefined) return;
 
-        if (!token && rootSegment == "(tabs)"){
-            router.replace('/login');
-        } else if (token && rootSegment !== "(tabs)"){
-            router.replace('/home');
-        }
+            if (!token && rootSegment == "(tabs)"){
+                router.replace('/login');
+            } else if (token && rootSegment !== "(tabs)"){
+                router.replace('/home');
+            } else if (!token && rootSegment == undefined){
+                router.replace('/login');
+            }
+    }
+    waitandRedirect();
     }, [token, rootSegment])
 
     return (
