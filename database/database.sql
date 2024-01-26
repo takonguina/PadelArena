@@ -1,0 +1,14 @@
+CREATE DATABASE mydb;
+
+\c mydb
+
+CREATE TABLE IF NOT EXISTS users(
+    id_user SERIAL PRIMARY KEY,
+    first_name VARCHAR(320) NOT NULL,
+    last_name VARCHAR(320) NOT NULL,
+    birthday TIMESTAMP NOT NULL,
+    email VARCHAR(320) NOT NULL,
+    password VARCHAR(64) NOT NULL,
+    email_validated BOOLEAN NOT NULL DEFAULT FALSE,
+    date_insert TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

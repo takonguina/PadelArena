@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  database:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database:/usr/src/database
+
+  api:
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    build:
+      context: ./api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+    volumes:
+      - ./api:/api
