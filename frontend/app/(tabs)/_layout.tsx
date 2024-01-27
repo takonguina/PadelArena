@@ -28,10 +28,21 @@ const _layout = () => {
     <Tabs
     screenOptions={{
       tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,}}>
-        <Tabs.Screen name="home" options={{tabBarIcon: ({ color }) => <TabBarIconMaterialIcons name="home" color={color}/>}}/>
-        <Tabs.Screen name="reservation" options={{tabBarIcon: ({ color }) => <TabBarIconMaterialIcons name="sports-tennis" color={color}/>}}/>
-        <Tabs.Screen name="profil" options={{tabBarIcon: ({ color }) => <TabBarIconFontAwesome name="user" color={color}/>}}/>
-        <Tabs.Screen name="contact" options={{tabBarIcon: ({ color }) => <TabBarIconMaterialIcons name="contact-phone" color={color}/>}}/>
+        <Tabs.Screen 
+          name="home" 
+          options={{
+            tabBarIcon: ({ color }) => <TabBarIconMaterialIcons name="home" color={color}/>}}/>
+        <Tabs.Screen 
+          name="reservation" 
+          options={{
+            tabBarIcon: ({ color }) => <TabBarIconMaterialIcons name="sports-tennis" color={color}/>}}/>
+        <Tabs.Screen 
+          name="profil" 
+          options={{
+            tabBarIcon: ({ color }) => <TabBarIconFontAwesome name="user" color={color}/>}}/>
+        <Tabs.Screen 
+          name="contact" 
+          options={{tabBarIcon: ({ color }) => <TabBarIconMaterialIcons name="contact-phone" color={color}/>}}/>
     </Tabs>
   )
 }
