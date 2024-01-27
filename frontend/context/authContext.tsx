@@ -89,9 +89,9 @@ export function AuthProvider({children}: React.PropsWithChildren){
                 await sleep(2000);
             }
 
-            if (!token && rootSegment == "(tabs)"){
+            if (!token && (rootSegment == "(tabs)" || rootSegment == "(modal)")){
                 router.replace('/login');
-            } else if (token && rootSegment !== "(tabs)"){
+            } else if (token && (rootSegment == "(auth)" || rootSegment == undefined)){
                 router.replace('/home');
             } else if (!token && rootSegment == undefined){
                 router.replace('/login');

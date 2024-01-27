@@ -1,7 +1,7 @@
-import { Tabs } from "expo-router";
+import { Link, Tabs } from "expo-router";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome from '@expo/vector-icons/FontAwesome'
-import { useColorScheme } from "react-native";
+import { Pressable, useColorScheme } from "react-native";
 import Colors from '../theme/color';
 
 // Explore icon families and icons at https://icons.expo.fyi/
@@ -31,18 +31,37 @@ const _layout = () => {
         <Tabs.Screen 
           name="home" 
           options={{
+            title: "Home",
             tabBarIcon: ({ color }) => <TabBarIconMaterialIcons name="home" color={color}/>}}/>
         <Tabs.Screen 
           name="reservation" 
           options={{
+            title: "Reservation",
             tabBarIcon: ({ color }) => <TabBarIconMaterialIcons name="sports-tennis" color={color}/>}}/>
         <Tabs.Screen 
           name="profil" 
           options={{
-            tabBarIcon: ({ color }) => <TabBarIconFontAwesome name="user" color={color}/>}}/>
+            title: "Profil",
+            tabBarIcon: ({ color }) => <TabBarIconFontAwesome name="user" color={color}/>,
+            headerRight: () => (
+              <Link href="/appSettings" asChild>
+                <Pressable>
+                  {({ pressed }) => (
+                    <FontAwesome
+                      name="gear"
+                      size={25}
+                      color={Colors[colorScheme ?? 'light'].text}
+                      style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                    />
+                  )}
+                </Pressable>
+              </Link>
+            )}}/>
         <Tabs.Screen 
           name="contact" 
-          options={{tabBarIcon: ({ color }) => <TabBarIconMaterialIcons name="contact-phone" color={color}/>}}/>
+          options={{
+            title: "Contact",
+            tabBarIcon: ({ color }) => <TabBarIconMaterialIcons name="contact-phone" color={color}/>}}/>
     </Tabs>
   )
 }
