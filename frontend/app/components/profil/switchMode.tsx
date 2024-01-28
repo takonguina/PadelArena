@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, StyleSheet } from 'react-native';
 import { useColorScheme, Appearance } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Text, View } from '../../theme/themed';
 
 export default function SwitchMode() {
   const colorScheme = useColorScheme();
   const [isDarkMode, setIsDarkMode] = useState(colorScheme === 'dark');
+
+  const saveColorMode = async (value: string) => {
+    try {
+      await AsyncStorage.setItem('colorMode', value);
+    } catch (e) {
+      // saving error
+    }
+  };
 
   useEffect(() => {
     const appearanceListener = Appearance.addChangeListener(({ colorScheme }) => {
@@ -21,6 +30,7 @@ export default function SwitchMode() {
   const toggleDarkMode = () => {
     const newColorScheme = isDarkMode ? 'light' : 'dark';
     Appearance.setColorScheme(newColorScheme);
+    saveColorMode(newColorScheme);
   };
 
   return (

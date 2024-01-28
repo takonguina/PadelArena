@@ -1,8 +1,39 @@
-import { ActivityIndicator, Dimensions, View, Button, SafeAreaView ,StyleSheet, ImageBackground } from 'react-native';
-import { router } from 'expo-router';
+import { 
+  ActivityIndicator, 
+  Appearance, 
+  Dimensions, 
+  View, 
+  SafeAreaView,
+  StyleSheet,
+  ImageBackground } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from 'react';
 
 const index = () => {
 
+  const getColorMode = async () => {
+    try {
+      const value = await AsyncStorage.getItem('colorMode');
+      if (value !== null) {
+        return value === 'dark';
+      }
+      return null;
+    } catch (e) {
+      // error reading value
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const setInitialColorMode = async () => {
+      const storedColor = await getColorMode();
+      if (storedColor !== null) {
+        Appearance.setColorScheme(storedColor ? 'dark' : 'light');
+      }
+    };
+  
+    setInitialColorMode();
+  }, []);
   
 
   return (
