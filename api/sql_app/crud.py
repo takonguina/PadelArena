@@ -38,3 +38,12 @@ def change_user_infos(db: Session, user_info: schemas.UserInfos, user_id: int):
     add_commit(db=db,
                row=user)
     return True
+
+def change_password(db: Session, user_id: str, new_password: str):
+    user = db.query(models.Users).filter(models.Users.id_user == user_id).first()
+    if user == None:
+        return None
+    user.password = new_password
+    add_commit(db=db,
+               row=user)
+    return True
