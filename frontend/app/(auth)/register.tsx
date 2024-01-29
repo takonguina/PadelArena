@@ -8,7 +8,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import moment from 'moment';
-import { useRouter } from 'expo-router';
+import { router } from 'expo-router';
 
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -29,7 +29,6 @@ const SignupSchema = Yup.object().shape({
 });
 
 const Register = () => {
-  const router= useRouter();
   const colorScheme = useColorScheme();
   const [date, setDate] = useState(new Date());
   var formatedDate = moment(date).format('MMM DD YYYY');
@@ -50,23 +49,22 @@ const Register = () => {
   const onSubmit = async (data: any) => {
     
     try {
-    const response = await axios.post(`${apiUrl}`, {
-      first_name: data.firstName,
-      last_name: data.lastName,
-      birthday: data.birth,
-      email: data.email,
-      password: data.password
-    }, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    }
-    );
-    if (response.status === 201) {
-      Alert.alert("Registration complete! 🎉", 'Please check your inbox to confirm your email and start exploring.')
-      router.back();
-    } 
+      const response = await axios.post(`${apiUrl}`, {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        birthday: data.birth,
+        email: data.email,
+        password: data.password
+      }, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      if (response.status === 201) {
+        Alert.alert("Registration complete! 🎉", 'Please check your inbox to confirm your email and start exploring.')
+        router.back();
+      } 
     } catch (error) {
       if ((error as any).response?.status === 302) {
         Alert.alert("Email already registered")

@@ -41,7 +41,6 @@ const loginPage = () => {
         })
         if (response.status === 200) {
           auth.signIn(JSON.stringify(response.data.access_token))
-          router.replace("/(tabs)/home");
         }
       } catch (error) {
         if ((error as any).response?.status === 404) {

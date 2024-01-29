@@ -29,7 +29,7 @@ export function AuthProvider({children}: React.PropsWithChildren){
     const router = useRouter();
     const [token, setToken] = useState<string | undefined>(undefined);
     const [userData, setUserData] = useState<UserData | undefined>(undefined);
-    const apiURL = 'http://192.168.1.63:3000/auth/user/';
+    const apiURL = 'http://192.168.1.63:3000/users/user/';
 
     const storeData = async (new_token: string) => {
         try {
