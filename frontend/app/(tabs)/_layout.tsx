@@ -37,6 +37,7 @@ const _layout = () => {
           name="reservation" 
           options={{
             title: "Reservation",
+            headerShown: false,
             tabBarIcon: ({ color }) => <TabBarIconMaterialIcons name="sports-tennis" color={color}/>}}/>
         <Tabs.Screen 
           name="profil" 

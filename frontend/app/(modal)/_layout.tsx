@@ -9,6 +9,7 @@ const _layout = () => {
     <ThemeProvider value={colorScheme === 'light' ?  DefaultTheme : DarkTheme}>
     <Stack>
         <Stack.Screen name="appSettings" options={{ presentation: "modal", title: "Settings" }}/>
+        <Stack.Screen name="newReservation" options={{ presentation: "modal", title: "New Reservation" }}/>
     </Stack>
     </ThemeProvider>
   )

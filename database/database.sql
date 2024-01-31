@@ -12,3 +12,21 @@ CREATE TABLE IF NOT EXISTS users(
     email_validated BOOLEAN NOT NULL DEFAULT FALSE,
     date_insert TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS courts(
+    id_court SERIAL PRIMARY KEY,
+);
+
+-- Insert 4 courts
+INSERT INTO courts DEFAULT VALUES, DEFAULT VALUES, DEFAULT VALUES, DEFAULT VALUES;
+
+CREATE TABLE IF NOT EXISTS reservations(
+    id_reservation SERIAL PRIMARY KEY,
+    id_court INT NOT NULL,
+    id_user INT NOT NULL,
+    reservation_date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    duration_minutes INT NOT NULL,
+    CONSTRAINT fk_court FOREIGN KEY(id_court) REFERENCES courts(id_court),
+    CONSTRAINT fk_user FOREIGN KEY(id_user) REFERENCES users(id_user)
+);

@@ -8,7 +8,7 @@ const _layout = () => {
   return (
     <ThemeProvider value={colorScheme === 'light' ?  DefaultTheme : DarkTheme}>
     <Stack>
-        <Stack.Screen name="login"/>
+        <Stack.Screen name="login" options={{ title: "Login" }}/>
         <Stack.Screen name="register" options={{ presentation: "modal", title: "Register" }}/>
     </Stack>
     </ThemeProvider>
