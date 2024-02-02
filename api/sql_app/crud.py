@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import time
 
 from sqlalchemy import and_, cast, func, or_, Time
 from sqlalchemy.orm import Session
@@ -52,14 +52,42 @@ def change_password(db: Session, user_id: str, new_password: str):
                row=user)
     return True
 
+## Check if court is available
+def check_availability(db: Session, reservation: schemas.NewReservation):
+    courts = range(1,5)
+    reservations_all_day = db.query(models.Reservations).filter(models.Reservations.reservation_date == reservation.reservation_date ).all()
 
-def create_reservation(db: Session, user_id: str, reservation: schemas.NewReservation):
-    check_court = 1
-    
-    if check_court == False:
-        return False
+    def is_overlapping(existing_start, existing_end, new_start, new_end):
+        new_start = time.fromisoformat(new_start)
+        new_end = time.fromisoformat(new_end)
 
-    db_reservation = models.Reservations(id_court = check_court,
+        return (
+            (existing_start <= new_start < existing_end)
+            or (existing_start < new_end <= existing_end)
+            or (new_start <= existing_start and new_end >= existing_end)
+        )
+
+    # Check availability for each court
+    for court_id in courts:
+        is_available = True
+        for existing_reservation in reservations_all_day:
+            if existing_reservation.id_court == court_id:
+                if is_overlapping(
+                    existing_reservation.start_time,
+                    existing_reservation.end_time,
+                    reservation.start_time,
+                    reservation.end_time,
+                ):
+                    is_available = False
+                    break
+
+        if is_available:
+            return court_id  # The court is available
+
+    return None
+
+def create_reservation(db: Session, user_id: str, reservation: schemas.NewReservation, id_court: int):
+    db_reservation = models.Reservations(id_court = id_court,
                                          id_user = user_id,
                                          reservation_date = reservation.reservation_date,
                                          start_time = reservation.start_time,

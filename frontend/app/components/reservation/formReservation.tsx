@@ -1,3 +1,4 @@
+import axios from "axios";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Formik } from "formik";
 import moment from "moment";
@@ -12,6 +13,7 @@ import { Text, TextInput } from '../../theme/themed';
 import * as Yup from 'yup';
 import { useState } from "react";
 import { router } from "expo-router";
+import { useAuth } from "../../../context/authContext";
 
 
 const ReservationSchema = Yup.object().shape({
@@ -22,10 +24,10 @@ const ReservationSchema = Yup.object().shape({
   endTime: Yup.string()
     .required('Required')
     .test('is-greater', 'Minimum 1 hour', function (endTime) {
-      const { startParent } = this.parent;
+      const { startTime } = this.parent;
 
       // Convert times to moment objects for easy comparison
-      const startMoment = moment(startParent, 'HH:mm');
+      const startMoment = moment(startTime, 'HH:mm');
       const endMoment = moment(endTime, 'HH:mm');
 
       // Check if endTime is after startParent with at least 1 hour difference
@@ -34,6 +36,7 @@ const ReservationSchema = Yup.object().shape({
 });
 
 const inputReservation = () => {
+  const auth = useAuth();
   const colorScheme = useColorScheme();
   const [date, setDate] = useState(new Date());
 
@@ -51,10 +54,39 @@ const inputReservation = () => {
   const [startTime, setStartTime] = useState(formatedTime(new Date(), 1));
   const [endTime, setEndTime] = useState(formatedTime(new Date(), 2));
 
+  const apiUrl = "http://192.168.1.63:3000/reservation/new_reservation/";
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     console.log(data)
-    // router.back();
+    const fixed_token = auth.token.replace(/['"]/g, '');
+    try{ 
+      const response = await axios.post(`${apiUrl}`,
+        {
+          'reservation_date': moment(date).format('DD/MM/YYYY'),
+          'start_time': moment(startTime).format('HH:mm'),
+          'end_time': moment(endTime).format('HH:mm')
+        },
+        {
+          params: {
+            'access_token': fixed_token
+          },
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      if (response.status == 200){
+        Alert.alert("Reservation confirmed! 🎾", "Make sure you're ready to play and enjoy your time on the court!")
+        router.back();
+      }
+    } catch(error){
+        if ((error as any).response?.status === 409) {
+          Alert.alert("Slot not available ⛔️", "Sorry, the time slot you selected is no longer available. Please choose another time slot. ")
+        } else {
+          Alert.alert("Unexpected error has occurred")
+        }
+    }
   };
 
   const onConfirm = (data: any) => { 
