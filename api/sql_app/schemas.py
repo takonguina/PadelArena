@@ -7,14 +7,13 @@ class CreateUserRequest(BaseModel):
     birthday: datetime
     email: str
     password: str
-    
 
 class User(CreateUserRequest):
     email_validated: bool
     date_insert: datetime
 
 class UserLogin(BaseModel):
-    email : str
+    email: str
     password: str
 
 class UserInfos(BaseModel):
@@ -26,3 +25,12 @@ class UserInfos(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+class NewReservation(BaseModel):
+    reservation_date: str
+    start_time: str
+    duration_minutes: int
+
+class Reservation(NewReservation):
+    id_reservation: int
+    id_court: int

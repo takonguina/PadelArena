@@ -2,14 +2,12 @@ import {
   Dimensions, 
   Image, 
   SafeAreaView, 
-  StatusBar,
   StyleSheet,
   View } from 'react-native';
 
 const header = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-    <StatusBar barStyle={"light-content"}/>
     <View style={styles.container}>
       <Image 
         source={require('/home/tommy/prog/padelarena/frontend/assets/reservationheader.png')}

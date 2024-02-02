@@ -2,17 +2,24 @@ import {
   View, 
   StyleSheet,
   Platform,
-  ScrollView,
-  TouchableOpacity} from 'react-native';
+  TouchableOpacity,
+  StatusBar} from 'react-native';
 import { 
   Text as TextThemed, 
   View as ViewThemed } from '../theme/themed';
+import CurrentReservation from '../components/reservation/currentReservation';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import Header from '../components/reservation/header';
 import { useAuth } from '../../context/authContext';
-import { useRef } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
+import React from 'react';
+import { useIsFocused } from '@react-navigation/native';
+
+function FocusAwareStatusBar(props: any) {
+  const isFocused = useIsFocused();
+
+  return isFocused ? <StatusBar {...props} /> : null;
+}
 
 const reservation = () => {
   const auth = useAuth();
@@ -20,8 +27,9 @@ const reservation = () => {
   return (
     
     <View style={styles.container}>
+      <FocusAwareStatusBar barStyle="light-content"/>
+
       <Header/>
-      
       <TextThemed style={styles.welcomeText}>Welcome, {auth.userData.first_name}</TextThemed>
       <View style={styles.buttonContainer}>
         <TextThemed style={styles.reservation}>Add Reservation</TextThemed>
@@ -33,7 +41,7 @@ const reservation = () => {
             style={styles.icon}/>
         </TouchableOpacity>
         <ViewThemed style={styles.separator} lightColor="#e0e0e0" darkColor="rgba(255,255,255,0.1)" />
-        <TextThemed style={styles.reservation}>Reserved</TextThemed>
+        <CurrentReservation />
       </View>
       
     </View>
@@ -62,10 +70,9 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1.5,
     width: '80%',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   welcomeText:{
-    // color: "#ffffff",
     ...Platform.select({
       ios:{
         color:"#ffffff",

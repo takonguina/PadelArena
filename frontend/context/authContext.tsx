@@ -73,7 +73,7 @@ export function AuthProvider({children}: React.PropsWithChildren){
             if (response.status === 200)
                 setUserData(response.data[0]);
         } catch (e) {
-
+            
         }
     };
 
