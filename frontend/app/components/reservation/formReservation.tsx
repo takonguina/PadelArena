@@ -11,122 +11,108 @@ import {
 import { Text, TextInput } from '../../theme/themed';
 import * as Yup from 'yup';
 import { useState } from "react";
+import { router } from "expo-router";
 
 
 const ReservationSchema = Yup.object().shape({
-  date: Yup.string()
+  reservationDate: Yup.string()
     .required('Required'),
   startTime: Yup.string()
     .required('Required'),
   endTime: Yup.string()
-    .required('Required'),
+    .required('Required')
+    .test('is-greater', 'Minimum 1 hour', function (endTime) {
+      const { startParent } = this.parent;
+
+      // Convert times to moment objects for easy comparison
+      const startMoment = moment(startParent, 'HH:mm');
+      const endMoment = moment(endTime, 'HH:mm');
+
+      // Check if endTime is after startParent with at least 1 hour difference
+      return  endMoment.isSameOrAfter(startMoment) && endMoment.diff(startMoment, 'hours') >= 1;
+    }),
 });
 
 const inputReservation = () => {
   const colorScheme = useColorScheme();
   const [date, setDate] = useState(new Date());
-  var formatedDate = moment(date).format('MMM DD YYYY');
 
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = useState(false);
 
-
-  // Initialize with the next hour and 0 minutes for START
-  const initialStartTime = new Date();
-  const nextHourStartTime = new Date(initialStartTime);
-  nextHourStartTime.setHours(initialStartTime.getHours() + 1);
-  nextHourStartTime.setMinutes(0);
-  const [startTime, setStartTime] = useState(nextHourStartTime);
-  var formatedStartTime = moment(startTime).format("HH:mm");
-
-  // Initialize with the current time and 0 minutes for END
-  const initialEndTime = new Date();
-  const nextHourEndTime = new Date(initialEndTime);
-  nextHourEndTime.setHours(initialEndTime.getHours() + 2);
-  nextHourEndTime.setMinutes(0);
-  const [endTime, setEndTime] = useState(nextHourEndTime);
-  var formatedEndTime = moment(endTime).format("HH:mm");
-
-  const today = new Date()
-
-  const handleDateConfirm = (selectedDate : any) => {
-    setDate(selectedDate);
-    setShowDatePicker(false);
+  const formatedTime = (time: Date, delay: number) => {
+    time.setHours(time.getHours() + delay)
+    time.setMinutes(0)
+    return time
   };
 
-  const handleStartTimeConfirm = (selectedDate : any) => {
-    setStartTime(selectedDate);
-    setShowStartTimePicker(false);
-  };
-  const handleEndTimeConfirm = (selectedDate : any) => {
-    setEndTime(selectedDate);
-    setShowEndTimePicker(false);
-    console.log(formatedDate, formatedStartTime, formatedEndTime)
+  // Initialize with the next hour and 0 minutes
+  const [startTime, setStartTime] = useState(formatedTime(new Date(), 1));
+  const [endTime, setEndTime] = useState(formatedTime(new Date(), 2));
+
+
+  const onSubmit = (data: any) => {
+    console.log(data)
+    // router.back();
   };
 
-  const onSubmit = (data: any) => { 
+  const onConfirm = (data: any) => { 
     Alert.alert('Confirm Reservation', 'Please check the date and times', [
       {
         text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
         style: 'destructive',
-        
       },
-      {text: 'OK', onPress: () => console.log('OK Pressed')},
+      {text: 'OK', onPress: () => onSubmit(data)},
     ]);
   };
-
+  
   return (
     <DefaultView style={styles.container}>
       <Formik
         initialValues={{
-          date: formatedDate,
-          startTime: formatedStartTime,
-          endTime: formatedEndTime,
+          reservationDate: moment(date).format('DD/MM/YYYY'),
+          startTime: moment(startTime).format('HH:mm'),
+          endTime: moment(endTime).format('HH:mm'),
         }}
-        onSubmit={values => onSubmit(values)}
+        onSubmit={values => onConfirm(values)}
         validationSchema={ReservationSchema}
       >
-      {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
+      {({ handleSubmit, setFieldValue, errors, touched }) => (
         <DefaultView>
 
           <DefaultView style={styles.inputContainer}>
             <Text style={styles.text}>Date</Text>
-            <TextInput
-              onPressIn={()=> setShowDatePicker(true)}
-              onChangeText={handleChange('date')}
-              onBlur={handleBlur('date')}
-              value={formatedDate}
-              style={styles.input}
-              placeholder={formatedDate}
-              placeholderTextColor= {colorScheme === 'dark' ? '#FFF' : '#000'}
-              editable={false}
-            />
-            {errors.date && touched.date ? (
-                <Text style={styles.textError}>{errors.date}</Text>
+
+              <TextInput
+              onPressIn={() => setShowDatePicker(true)}
+                style={styles.input}
+                value={moment(date).format("dddd DD MMMM YYYY")}
+                editable={false}
+              />
+            {errors.reservationDate && touched.reservationDate ? (
+                <Text style={styles.textError}>{errors.reservationDate}</Text>
               ) : null}
           </DefaultView>
           <DateTimePickerModal
-          isVisible={showDatePicker}
-          mode="date"
-          minimumDate = {today}
-          onConfirm={(selectedDate) => {
-            handleDateConfirm(selectedDate);
-            setFieldValue('date', selectedDate);
-          }}
-          onCancel={() => setShowDatePicker(false)}
+            isVisible={showDatePicker}
+            mode="date"
+            display="inline"
+            minimumDate={new Date()}
+            onConfirm={(date) => {
+              setDate(date);
+              setShowDatePicker(false);
+              setFieldValue('reservationDate', moment(date).format('DD/MM/YYYY'));
+            }}
+            onCancel={() => setShowDatePicker(false)}
           />
 
           <DefaultView style={styles.inputContainer}>
             <Text style={styles.text}>Start</Text>
             <TextInput
               onPressIn={()=> setShowStartTimePicker(true)}
-              onChangeText={handleChange('startTime')}
-              onBlur={handleBlur('startTime')}
-              value={formatedStartTime}
+              value={moment(startTime).format('HH:mm')}
               style={styles.input}
-              placeholder={formatedStartTime}
               placeholderTextColor= {colorScheme === 'dark' ? '#FFF' : '#000'}
               editable={false}
             />
@@ -138,9 +124,11 @@ const inputReservation = () => {
           isVisible={showStartTimePicker}
           mode="time"
           minuteInterval={30}
+          date={startTime}
           onConfirm={(selectedStartTime) => {
-            handleStartTimeConfirm(selectedStartTime);
-            setFieldValue('startTime', selectedStartTime);
+            setStartTime(selectedStartTime);
+            setShowStartTimePicker(false);
+            setFieldValue('startTime', moment(selectedStartTime).format("HH:mm"));
           }}
           onCancel={() => setShowStartTimePicker(false)}
           />
@@ -149,11 +137,8 @@ const inputReservation = () => {
             <Text style={styles.text}>End</Text>
             <TextInput
               onPressIn={()=> setShowEndTimePicker(true)}
-              onChangeText={handleChange('endTime')}
-              onBlur={handleBlur('endTime')}
-              value={formatedEndTime}
+              value={moment(endTime).format('HH:mm')}
               style={styles.input}
-              placeholder={formatedEndTime}
               placeholderTextColor= {colorScheme === 'dark' ? '#FFF' : '#000'}
               editable={false}
             />
@@ -164,18 +149,16 @@ const inputReservation = () => {
           <DateTimePickerModal
           isVisible={showEndTimePicker}
           mode="time"
+          date={endTime}
           minuteInterval={30}
-          onConfirm={(selectedStartTime) => {
-            handleEndTimeConfirm(selectedStartTime);
-            setFieldValue('startTime', selectedStartTime);
+          onConfirm={(selectedEndTime) => {
+            setEndTime(selectedEndTime);
+            setShowEndTimePicker(false);
+            setFieldValue('endTime', moment(selectedEndTime).format("HH:mm"));
           }}
           onCancel={() => setShowEndTimePicker(false)}
           />
           
-
-
-
-
           <DefaultView style={styles.submitButton}>
             <Button onPress={()=> handleSubmit()} title="Submit" />
           </DefaultView>        

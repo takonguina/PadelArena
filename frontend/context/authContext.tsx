@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRouter, useSegments } from "expo-router";
 import { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from "react-native";
 
 type UserData = {
     first_name: string;
@@ -73,7 +74,7 @@ export function AuthProvider({children}: React.PropsWithChildren){
             if (response.status === 200)
                 setUserData(response.data[0]);
         } catch (e) {
-            
+            storeData("")
         }
     };
 

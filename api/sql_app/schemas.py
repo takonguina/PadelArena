@@ -29,7 +29,7 @@ class Token(BaseModel):
 class NewReservation(BaseModel):
     reservation_date: str
     start_time: str
-    duration_minutes: int
+    end_time: str
 
 class Reservation(NewReservation):
     id_reservation: int

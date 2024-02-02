@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS reservations(
     id_user INT NOT NULL,
     reservation_date DATE NOT NULL,
     start_time TIME NOT NULL,
-    duration_minutes INT NOT NULL,
+    end_time TIME NOT NULL,
     CONSTRAINT fk_court FOREIGN KEY(id_court) REFERENCES courts(id_court),
     CONSTRAINT fk_user FOREIGN KEY(id_user) REFERENCES users(id_user)
 );

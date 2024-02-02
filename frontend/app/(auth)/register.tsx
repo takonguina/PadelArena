@@ -153,6 +153,7 @@ const Register = () => {
               value={values.email}
               style={styles.input}
               placeholder='Email'
+              autoCapitalize='none'
             />
             {errors.email && touched.email ? (
                 <Text style={styles.textError}>{errors.email}</Text>

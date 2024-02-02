@@ -78,7 +78,9 @@ const loginPage = () => {
           onBlur={handleBlur('email')}
           placeholder='Email' 
           style={styles.input}
-          value={values.email}/>
+          value={values.email}
+          autoCapitalize='none'
+          />
           {errors.email && touched.email ? (
                 <Text style={styles.textError}>{errors.email}</Text>
               ) : null}

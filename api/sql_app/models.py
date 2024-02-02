@@ -32,7 +32,7 @@ class Reservations(Base):
     id_user = Column(Integer, ForeignKey("users.id_user"), nullable=False)
     reservation_date = Column(Date, nullable=False)
     start_time = Column(Time, nullable=False)
-    duration_minutes = Column(Integer, nullable=False)
+    end_time = Column(Time, nullable=False)
 
     court = relationship("Courts", back_populates="reservations")
     user = relationship("Users", back_populates="reservations")
