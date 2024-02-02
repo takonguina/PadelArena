@@ -95,3 +95,7 @@ def create_reservation(db: Session, user_id: str, reservation: schemas.NewReserv
     add_commit(db=db,
                row=db_reservation)
     return True
+
+def get_reservation(db: Session, user_id: str):
+    reservation = db.query(models.Reservations).filter(models.Reservations.id_user == user_id).all()
+    return reservation

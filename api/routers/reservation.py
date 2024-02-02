@@ -6,7 +6,7 @@ from jose import jwt, JWTError
 
 from passlib.context import CryptContext
 
-from sql_app.crud import check_availability, create_reservation
+from sql_app.crud import check_availability, create_reservation, get_reservation
 from sql_app.dependencies.security import decode_jwt
 from sql_app.dependencies.session import get_db
 from sql_app.schemas import NewReservation
@@ -45,3 +45,13 @@ async def get_user(access_token: str,
         )
 
     return {"Reservation booked successfully"}
+
+@router.post("/get_reservation/")
+async def get_reservation_user(access_token: str,
+                               db_session: Session = Depends(get_db)):
+    
+    user_id = decode_jwt(access_token)
+    reservation = get_reservation(db=db_session,
+                                  user_id=user_id)
+    
+    return {"reservations" : reservation}
