@@ -1,4 +1,4 @@
-from datetime import time
+from datetime import datetime, time
 
 from sqlalchemy import and_, cast, func, or_, Time
 from sqlalchemy.orm import Session
@@ -97,5 +97,6 @@ def create_reservation(db: Session, user_id: str, reservation: schemas.NewReserv
     return True
 
 def get_reservation(db: Session, user_id: str):
-    reservation = db.query(models.Reservations).filter(models.Reservations.id_user == user_id).all()
+    today = datetime.now().strftime("%m/%d/%Y")
+    reservation = db.query(models.Reservations).filter(models.Reservations.id_user == user_id, models.Reservations.reservation_date >= today).order_by(models.Reservations.reservation_date.asc()).all()
     return reservation

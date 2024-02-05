@@ -57,12 +57,11 @@ const inputReservation = () => {
   const apiUrl = "http://192.168.1.63:3000/reservation/new_reservation/";
 
   const onSubmit = async (data: any) => {
-    console.log(data)
     const fixed_token = auth.token.replace(/['"]/g, '');
     try{ 
       const response = await axios.post(`${apiUrl}`,
         {
-          'reservation_date': moment(date).format('DD/MM/YYYY'),
+          'reservation_date': moment(date).format('MM/DD/YYYY'),
           'start_time': moment(startTime).format('HH:mm'),
           'end_time': moment(endTime).format('HH:mm')
         },
@@ -103,7 +102,7 @@ const inputReservation = () => {
     <DefaultView style={styles.container}>
       <Formik
         initialValues={{
-          reservationDate: moment(date).format('DD/MM/YYYY'),
+          reservationDate: moment(date).format('MM/DD/YYYY'),
           startTime: moment(startTime).format('HH:mm'),
           endTime: moment(endTime).format('HH:mm'),
         }}
@@ -134,7 +133,7 @@ const inputReservation = () => {
             onConfirm={(date) => {
               setDate(date);
               setShowDatePicker(false);
-              setFieldValue('reservationDate', moment(date).format('DD/MM/YYYY'));
+              setFieldValue('reservationDate', moment(date).format('MM/DD/YYYY'));
             }}
             onCancel={() => setShowDatePicker(false)}
           />

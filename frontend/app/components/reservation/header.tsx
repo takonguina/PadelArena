@@ -1,7 +1,7 @@
 import { 
+  SafeAreaView,
   Dimensions, 
   Image, 
-  SafeAreaView, 
   StyleSheet,
   View } from 'react-native';
 

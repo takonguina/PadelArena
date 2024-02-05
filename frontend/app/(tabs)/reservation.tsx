@@ -1,5 +1,5 @@
 import { 
-  View, 
+  View as DefaultView, 
   StyleSheet,
   Platform,
   TouchableOpacity,
@@ -14,6 +14,8 @@ import { useAuth } from '../../context/authContext';
 import { router } from 'expo-router';
 import React from 'react';
 import { useIsFocused } from '@react-navigation/native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+
 
 function FocusAwareStatusBar(props: any) {
   const isFocused = useIsFocused();
@@ -23,15 +25,14 @@ function FocusAwareStatusBar(props: any) {
 
 const reservation = () => {
   const auth = useAuth();
+  const insets = useSafeAreaInsets();
 
   return (
-    
-    <View style={styles.container}>
+    <DefaultView>
       <FocusAwareStatusBar barStyle="light-content"/>
-
       <Header/>
       <TextThemed style={styles.welcomeText}>Welcome, {auth.userData.first_name}</TextThemed>
-      <View style={styles.buttonContainer}>
+      <DefaultView style={styles.buttonContainer}>
         <TextThemed style={styles.reservation}>Add Reservation</TextThemed>
         <TouchableOpacity onPress={()=> router.push("/newReservation")}>
           <MaterialCommunityIcons 
@@ -42,17 +43,15 @@ const reservation = () => {
         </TouchableOpacity>
         <ViewThemed style={styles.separator} lightColor="#e0e0e0" darkColor="rgba(255,255,255,0.1)" />
         <CurrentReservation />
-      </View>
+      </DefaultView>
       
-    </View>
-    
+    </DefaultView>
+
   )
 }
 
 export default reservation
 const styles = StyleSheet.create({
-  container : {
-  },
   buttonContainer: {
     flexDirection: "column",
     paddingTop : 60
@@ -71,6 +70,8 @@ const styles = StyleSheet.create({
     height: 1.5,
     width: '80%',
     alignSelf: 'center',
+    paddingBottom : 0,
+    marginBottom : 10
   },
   welcomeText:{
     ...Platform.select({

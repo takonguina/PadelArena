@@ -4,10 +4,11 @@ import { Formik } from 'formik';
 import moment from 'moment';
 import { Text, TextInput } from '../../theme/themed';
 import { router, Stack } from 'expo-router';
-import { Alert, Button,  StyleSheet, SafeAreaView, ScrollView, View, useColorScheme } from 'react-native';
+import { Alert, Button,  StyleSheet, ScrollView, View, useColorScheme } from 'react-native';
 import CustomKeyboardAvoidingView from '../keyboardAvoidingView';
 import { useAuth } from '../../../context/authContext';
 import * as Yup from 'yup';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 
 const SignupSchema = Yup.object().shape({

@@ -1,4 +1,4 @@
-import { Alert, Button, Dimensions, Image, StyleSheet, ScrollView, TouchableOpacity, View, SafeAreaView, ImageBackground } from 'react-native';
+import { Alert, Button, Dimensions, Image, StyleSheet, ScrollView, TouchableOpacity, View, ImageBackground } from 'react-native';
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import CustomKeyboardAvoidingView from '../components/keyboardAvoidingView';
@@ -8,7 +8,7 @@ import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { useAuth } from '../../context/authContext';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SignupSchema = Yup.object().shape({
   email: Yup.string()

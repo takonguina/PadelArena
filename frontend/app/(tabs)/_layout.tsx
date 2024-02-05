@@ -4,6 +4,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { Pressable, useColorScheme } from "react-native";
 import Colors from '../theme/color';
 
+
 // Explore icon families and icons at https://icons.expo.fyi/
 
 function TabBarIconMaterialIcons(props: {
@@ -24,7 +25,6 @@ const _layout = () => {
   const colorScheme = useColorScheme();
 
   return (
-
     <Tabs
     screenOptions={{
       tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,}}>
@@ -39,7 +39,6 @@ const _layout = () => {
           options={{
             title: "Reservation",
             headerShown: false,
-            
             tabBarIcon: ({ color }) => <TabBarIconMaterialIcons name="sports-tennis" color={color}/>}}/>
         <Tabs.Screen 
           name="profil"

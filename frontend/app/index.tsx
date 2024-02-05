@@ -3,11 +3,11 @@ import {
   Appearance, 
   Dimensions, 
   View, 
-  SafeAreaView,
   StyleSheet,
   ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const index = () => {
 

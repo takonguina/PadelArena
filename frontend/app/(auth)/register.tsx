@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Alert ,StyleSheet, ScrollView, useColorScheme, View, Button, SafeAreaView } from 'react-native';
+import { Alert ,StyleSheet, ScrollView, useColorScheme, View, Button } from 'react-native';
 import { Text, TextInput } from '../theme/themed';
 import React, {useState} from 'react';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -9,6 +9,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import moment from 'moment';
 import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string()
