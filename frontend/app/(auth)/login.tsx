@@ -1,9 +1,9 @@
-import { Alert, Button, Dimensions, Image, StyleSheet, ScrollView, TouchableOpacity, View, ImageBackground } from 'react-native';
+import { Alert, Button, Dimensions, StyleSheet, ScrollView, TouchableOpacity, View, ImageBackground } from 'react-native';
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import CustomKeyboardAvoidingView from '../components/keyboardAvoidingView';
 import { TextInput, Text, View as ViewThemed  } from "../theme/themed";
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
@@ -42,13 +42,16 @@ const loginPage = () => {
         if (response.status === 200) {
           auth.signIn(JSON.stringify(response.data.access_token))
         }
-      } catch (error) {
-        if ((error as any).response?.status === 404) {
-          Alert.alert("Email not registered")
-        } else {
-          Alert.alert("Wrong email or password")
+        } catch (error) {
+          if ((error as AxiosError).response?.status === 404) {
+            Alert.alert("Email not registered");
+          } else if (axios.isAxiosError(error) && !error.response) {
+            Alert.alert("Connection Failure ⛔️", "Sorry, our service is not available or you do not have an internet connection.");
+          } else {
+            Alert.alert("Wrong password or email");
+            console.error(error);
+          }
         }
-      }
 
     };
     

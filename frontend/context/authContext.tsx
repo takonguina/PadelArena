@@ -74,7 +74,8 @@ export function AuthProvider({children}: React.PropsWithChildren){
             if (response.status === 200)
                 setUserData(response.data[0]);
         } catch (e) {
-            storeData("")
+            router.replace('/login');
+            Alert.alert("Connection Failure ⛔️", "Sorry, our service is not available or you do not have an internet connection.")
         }
     };
 

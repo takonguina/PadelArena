@@ -12,10 +12,11 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Header from '../components/reservation/header';
 import { useAuth } from '../../context/authContext';
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { useIsFocused } from '@react-navigation/native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-
+import { translations } from '../../localizations';
+import * as Localization from 'expo-localization';
+import { I18n } from 'i18n-js';
 
 function FocusAwareStatusBar(props: any) {
   const isFocused = useIsFocused();
@@ -25,13 +26,16 @@ function FocusAwareStatusBar(props: any) {
 
 const reservation = () => {
   const auth = useAuth();
-  const insets = useSafeAreaInsets();
-
+  const i18n = new I18n(translations)
+  const [locale, setLocale] = useState(Localization.locale);
+  i18n.locale = locale
+  i18n.enableFallback = true;
+  
   return (
     <DefaultView>
       <FocusAwareStatusBar barStyle="light-content"/>
       <Header/>
-      <TextThemed style={styles.welcomeText}>Welcome, {auth.userData.first_name}</TextThemed>
+      <TextThemed style={styles.welcomeText}>{i18n.t('welcome')}, {auth.userData.first_name}</TextThemed>
       <DefaultView style={styles.buttonContainer}>
         <TextThemed style={styles.reservation}>Add Reservation</TextThemed>
         <TouchableOpacity onPress={()=> router.push("/newReservation")}>

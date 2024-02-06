@@ -3,7 +3,8 @@ import {
     Alert,
     FlatList,
     StyleSheet,
-    View as DefaultView, } from 'react-native';
+    View as DefaultView,
+    useColorScheme, } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { Text as TextThemed } from '../../theme/themed';
 import { useAuth } from '../../../context/authContext';
@@ -77,6 +78,8 @@ const CourtComponent: React.FC<{ id_court: number }> = ({ id_court }) => {
 
 const currentReservation = () => {
     const auth = useAuth();
+    const colorScheme = useColorScheme();
+    const backgroundColor = colorScheme === 'dark' ? '#333' : 'white';
     const apiUrl = "http://192.168.1.63:3000/reservation/get_reservation/";
     const [reservations, setReservations] = useState<Reservation[]>([]);
 
@@ -111,7 +114,7 @@ const currentReservation = () => {
       
 
   return (
-    <DefaultView style={{maxHeight: 470}}>
+    <DefaultView style={{height: 470}}>
         <TextThemed style={styles.reservation}>Reserved</TextThemed>
         {reservations.length === 0 ? (
             <TextThemed style={styles.none}>No réservation.</TextThemed>
@@ -121,7 +124,7 @@ const currentReservation = () => {
               data={reservations}
               keyExtractor={(item) => item.id_reservation.toString()}
               renderItem={({ item }) => (
-                <DefaultView style={styles.itemContainer}>
+                <DefaultView style={[styles.itemContainer, { backgroundColor }]}>
                   <DateComponent dateString={item.reservation_date} />
                   <DefaultView style={styles.detailsContainer}>
                     <DefaultView style={styles.infoContainer}>
@@ -147,7 +150,6 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       alignItems: "center",
       borderRadius: 10,
-      backgroundColor : "white",
       shadowColor: "#000",
       shadowOffset: {
         width: 0,
