@@ -1,7 +1,20 @@
 const translations = { 
     en : { 
-        welcome: "Welcome"},
+        locale : "en-US",
+        welcome: "Welcome",
+        home: "Home",
+        reservation: "Reservation",
+        profil: "Profil",
+        contact: "Contact",
+    },
     fr : { 
-        welcome: "Bonjour"}}
+        locale : "fr-FR",
+        welcome: "Bonjour",
+        home: "Accueil",
+        reservation: "Reservation",
+        profil: "Profil",
+        contact: "Contact"
+    }
+}
 
-export { translations}
+export { translations }

@@ -27,7 +27,7 @@ const SignupSchema = Yup.object().shape({
     .required('Please enter email adress'),
 });
 
-const myInformations = () => {
+const myInformation = () => {
   const auth = useAuth();
   const colorScheme = useColorScheme();
   const [date, setDate] = useState(auth.userData.birthday);
@@ -71,7 +71,7 @@ const myInformations = () => {
     <SafeAreaView style={{ flex: 1 }}>
     <CustomKeyboardAvoidingView>
     <ScrollView style={styles.container}>
-      <Stack.Screen options={{headerTitle: "My informations", headerBackTitle: "Profil"}} />
+      <Stack.Screen options={{headerTitle: "My information", headerBackTitle: "Profil"}} />
       
       <Formik
         initialValues={{
@@ -169,7 +169,7 @@ const myInformations = () => {
   )
 }
 
-export default myInformations
+export default myInformation
 
 const styles = StyleSheet.create({
   container: {

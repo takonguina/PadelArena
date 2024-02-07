@@ -10,11 +10,11 @@ const ProfilScreen = () => {
   return (
     <DefaultView style={styles.mainContainer}>
       <TouchableOpacity 
-        onPress={() => router.push('/components/profil/myInformations')}>
+        onPress={() => router.push('/components/profil/myInformation')}>
 
         <View style={styles.settingsClass}>
           <Ionicons name="information" size={24} color="#aaa" />
-          <Text style={styles.textNavigation}>My informations</Text>
+          <Text style={styles.textNavigation}>My information</Text>
         </View>
       </TouchableOpacity>
     

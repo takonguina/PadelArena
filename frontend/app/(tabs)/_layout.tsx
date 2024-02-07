@@ -3,6 +3,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { Pressable, useColorScheme } from "react-native";
 import Colors from '../theme/color';
+import { useAuth } from "../../context/authContext";
 
 
 // Explore icon families and icons at https://icons.expo.fyi/
@@ -23,6 +24,8 @@ function TabBarIconFontAwesome(props: {
 
 const _layout = () => {
   const colorScheme = useColorScheme();
+  const auth = useAuth();
+  const i18n = auth.i18n
 
   return (
     <Tabs
@@ -32,18 +35,18 @@ const _layout = () => {
         <Tabs.Screen 
           name="home" 
           options={{
-            title: "Home",
+            title: i18n.t("home"),
             tabBarIcon: ({ color }) => <TabBarIconMaterialIcons name="home" color={color}/>}}/>
         <Tabs.Screen 
           name="reservation"
           options={{
-            title: "Reservation",
+            title: i18n.t("reservation"),
             headerShown: false,
             tabBarIcon: ({ color }) => <TabBarIconMaterialIcons name="sports-tennis" color={color}/>}}/>
         <Tabs.Screen 
           name="profil"
           options={{
-            title: "Profil",
+            title: i18n.t("profil"),
             tabBarIcon: ({ color }) => <TabBarIconFontAwesome name="user" color={color}/>,
             headerRight: () => (
               <Link href="/appSettings" asChild>
@@ -62,7 +65,7 @@ const _layout = () => {
         <Tabs.Screen 
           name="contact" 
           options={{
-            title: "Contact",
+            title: i18n.t("contact"),
             tabBarIcon: ({ color }) => <TabBarIconMaterialIcons name="contact-phone" color={color}/>}}/>
     </Tabs>
   )

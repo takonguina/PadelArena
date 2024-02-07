@@ -4,6 +4,10 @@ import { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from "react-native";
 
+import { translations } from '../localizations';
+import * as Localization from 'expo-localization';
+import { I18n } from 'i18n-js';
+
 type UserData = {
     first_name: string;
     last_name: string;
@@ -26,6 +30,12 @@ export function useAuth(){
 }
 
 export function AuthProvider({children}: React.PropsWithChildren){
+    const i18n = new I18n(translations);
+    const [locale, setLocale] = useState(Localization.locale);
+    i18n.locale = locale;
+    i18n.enableFallback = true;
+    i18n.defaultLocale = "en"
+
     const rootSegment = useSegments()[0];
     const router = useRouter();
     const [token, setToken] = useState<string | undefined>(undefined);
@@ -105,6 +115,8 @@ export function AuthProvider({children}: React.PropsWithChildren){
     return (
         <AuthContext.Provider
             value={{
+                locale: locale,
+                i18n: i18n,
                 token: token,
                 userData: userData,
                 signIn: (login_token: string) => {

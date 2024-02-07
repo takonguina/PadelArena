@@ -12,11 +12,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Header from '../components/reservation/header';
 import { useAuth } from '../../context/authContext';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { useIsFocused } from '@react-navigation/native';
-import { translations } from '../../localizations';
-import * as Localization from 'expo-localization';
-import { I18n } from 'i18n-js';
 
 function FocusAwareStatusBar(props: any) {
   const isFocused = useIsFocused();
@@ -26,10 +23,7 @@ function FocusAwareStatusBar(props: any) {
 
 const reservation = () => {
   const auth = useAuth();
-  const i18n = new I18n(translations)
-  const [locale, setLocale] = useState(Localization.locale);
-  i18n.locale = locale
-  i18n.enableFallback = true;
+  const i18n = auth.i18n
   
   return (
     <DefaultView>

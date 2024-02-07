@@ -2,6 +2,7 @@ import axios from "axios";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Formik } from "formik";
 import moment from "moment";
+import 'moment/locale/fr';
 import {
   Alert, 
   Button,
@@ -11,7 +12,7 @@ import {
   } from 'react-native';
 import { Text, TextInput } from '../../theme/themed';
 import * as Yup from 'yup';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { useAuth } from "../../../context/authContext";
 
@@ -37,9 +38,9 @@ const ReservationSchema = Yup.object().shape({
 
 const inputReservation = () => {
   const auth = useAuth();
+  const i18n = auth.i18n
   const colorScheme = useColorScheme();
   const [date, setDate] = useState(new Date());
-
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = useState(false);
@@ -118,7 +119,7 @@ const inputReservation = () => {
               <TextInput
               onPressIn={() => setShowDatePicker(true)}
                 style={styles.input}
-                value={moment(date).format("dddd DD MMMM YYYY")}
+                value={moment(date).locale(i18n.t("locale")).format("dddd DD MMMM YYYY")}
                 editable={false}
               />
             {errors.reservationDate && touched.reservationDate ? (
@@ -126,6 +127,7 @@ const inputReservation = () => {
               ) : null}
           </DefaultView>
           <DateTimePickerModal
+            locale={i18n.t('locale')}
             isVisible={showDatePicker}
             mode="date"
             display="inline"
