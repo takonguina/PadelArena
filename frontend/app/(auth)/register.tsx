@@ -10,24 +10,9 @@ import * as Yup from 'yup';
 import moment from 'moment';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuth } from '../../context/authContext';
 
-const SignupSchema = Yup.object().shape({
-  firstName: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Please enter full name'),
-  lastName: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Please enter full name'),
-  birth: Yup.string()
-    .required('Required'),
-  email: Yup.string()
-    .email('Invalid email')
-    .required('Please enter email adress'),
-  password: Yup.string()
-    .required('Required'),
-});
+
 
 const Register = () => {
   const colorScheme = useColorScheme();
@@ -36,6 +21,26 @@ const Register = () => {
   const [show, setShow] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const apiUrl = "http://192.168.1.63:3000/auth/register/";
+  const auth = useAuth();
+  const i18n = auth.i18n
+
+  const SignupSchema = Yup.object().shape({
+    firstName: Yup.string()
+      .min(1, i18n.t("tooShort"))
+      .max(50, i18n.t("tooLong"))
+      .required(i18n.t("requiredName")),
+    lastName: Yup.string()
+      .min(1, i18n.t("tooShort"))
+      .max(50, i18n.t("tooLong"))
+      .required(i18n.t("requiredName")),
+    birth: Yup.string()
+      .required(i18n.t("required")),
+    email: Yup.string()
+      .email(i18n.t("invalidEmail"))
+      .required(i18n.t("requiredEmail")),
+    password: Yup.string()
+      .required(i18n.t("required")),
+  });
 
 
   const toggleShowPassword = () => { 
@@ -63,14 +68,14 @@ const Register = () => {
         }
       });
       if (response.status === 201) {
-        Alert.alert("Registration complete! 🎉", 'Please check your inbox to confirm your email and start exploring.')
+        Alert.alert(i18n.t("registrationComplete"), i18n.t("registrationCompleteDetails"))
         router.back();
       } 
     } catch (error) {
       if ((error as any).response?.status === 302) {
-        Alert.alert("Email already registered")
+        Alert.alert(i18n.t("emailRegistered"))
       } else {
-        Alert.alert("Unexpected error occurred")
+        Alert.alert(i18n.t("unexpectedError"))
       }
     }
   }
@@ -93,26 +98,26 @@ const Register = () => {
       {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
         <View>
           <View style={styles.inputContainer}>
-            <Text style={styles.text}>First Name</Text>
+            <Text style={styles.text}>{i18n.t("firstName")}</Text>
             <TextInput
               onChangeText={handleChange('firstName')}
               onBlur={handleBlur('firstName')}
               value={values.firstName}
               style={styles.input}
-              placeholder='First Name'
+              placeholder={i18n.t("firstName")}
             />
             {errors.firstName && touched.firstName ? (
                 <Text style={styles.textError}>{errors.firstName}</Text>
               ) : null}
           </View>
           <View style={styles.inputContainer}>
-            <Text style={styles.text}>Last Name</Text>
+            <Text style={styles.text}>{i18n.t("lastName")}</Text>
             <TextInput
               onChangeText={handleChange('lastName')}
               onBlur={handleBlur('lastName')}
               value={values.lastName}
               style={styles.input}
-              placeholder='Last Name'
+              placeholder={i18n.t("lastName")}
             />
             {errors.lastName && touched.lastName ? (
                 <Text style={styles.textError}>{errors.lastName}</Text>
@@ -120,7 +125,7 @@ const Register = () => {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.text}>Date of Birth</Text>
+            <Text style={styles.text}>{i18n.t("birthday")}</Text>
             <TextInput
               onPressIn={()=> setShow(true)}
               onChangeText={handleChange('birth')}
@@ -147,13 +152,13 @@ const Register = () => {
 
 
           <View style={styles.inputContainer}>
-            <Text style={styles.text}>Email</Text>
+            <Text style={styles.text}>{i18n.t("email")}</Text>
             <TextInput
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
               value={values.email}
               style={styles.input}
-              placeholder='Email'
+              placeholder={i18n.t("email")}
               autoCapitalize='none'
             />
             {errors.email && touched.email ? (
@@ -163,7 +168,7 @@ const Register = () => {
 
 
           <View style={styles.inputContainer}>
-            <Text style={styles.text}>Password</Text>
+            <Text style={styles.text}>{i18n.t("password")}</Text>
             <View style={styles.maincontainer}> 
               <TextInput
                 onChangeText={handleChange('password')}
@@ -171,7 +176,7 @@ const Register = () => {
                 value={values.password}
                 secureTextEntry={!showPassword} 
                 style={styles.input} 
-                placeholder="Password"
+                placeholder={i18n.t("password")}
               /> 
               <MaterialCommunityIcons 
                 name={showPassword ? 'eye' : 'eye-off'} 
@@ -186,7 +191,7 @@ const Register = () => {
             ) : null}
           </View>
           <View style={styles.submitButton}>
-            <Button onPress={()=> handleSubmit()} title="Submit" />
+            <Button onPress={()=> handleSubmit()} title={i18n.t("submit")}/>
           </View>        
         </View>
       )}

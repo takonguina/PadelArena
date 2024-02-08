@@ -4,10 +4,13 @@ import { useColorScheme, Appearance } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Text, View } from '../../theme/themed';
+import { useAuth } from '../../../context/authContext';
 
 export default function SwitchMode() {
   const colorScheme = useColorScheme();
   const [isDarkMode, setIsDarkMode] = useState(colorScheme === 'dark');
+  const auth = useAuth();
+  const i18n = auth.i18n;
 
   const saveColorMode = async (value: string) => {
     try {
@@ -40,7 +43,7 @@ export default function SwitchMode() {
         <Text
           style={styles.text}
           lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)">{isDarkMode ? 'Dark Mode' : 'Light Mode'}</Text>
+          darkColor="rgba(255,255,255,0.8)">{isDarkMode ? i18n.t("darkMode") : i18n.t("lightMode")}</Text>
           {isDarkMode ? (
             <Text style={styles.emoji}>🌙</Text>
           ) : (

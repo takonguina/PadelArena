@@ -10,19 +10,21 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useAuth } from '../../context/authContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const SignupSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Invalid email')
-    .required('Please enter email adress'),
-  password: Yup.string()
-    .required('Required'),
-});
 
 const loginPage = () => {
   const auth = useAuth();
+  const i18n = auth.i18n;
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const apiUrl = "http://192.168.1.63:3000/auth/login/";
+
+  const SignupSchema = Yup.object().shape({
+    email: Yup.string()
+      .email(i18n.t("invalidEmail"))
+      .required(i18n.t("requiredEmail")),
+    password: Yup.string()
+      .required(i18n.t("requiredPassword")),
+  });
 
     const toggleShowPassword = () => { 
       setShowPassword(!showPassword); 
@@ -44,12 +46,11 @@ const loginPage = () => {
         }
         } catch (error) {
           if ((error as AxiosError).response?.status === 404) {
-            Alert.alert("Email not registered");
+            Alert.alert(i18n.t("emailNotRegistered"));
           } else if (axios.isAxiosError(error) && !error.response) {
-            Alert.alert("Connection Failure ⛔️", "Sorry, our service is not available or you do not have an internet connection.");
+            Alert.alert(i18n.t("connectionFailure"), i18n.t("connectionFailureDetails"));
           } else {
-            Alert.alert("Wrong password or email");
-            console.error(error);
+            Alert.alert(i18n.t("wrongInformation"));
           }
         }
 
@@ -79,7 +80,7 @@ const loginPage = () => {
         <TextInput
           onChangeText={handleChange('email')}
           onBlur={handleBlur('email')}
-          placeholder='Email' 
+          placeholder={i18n.t("email")}
           style={styles.input}
           value={values.email}
           autoCapitalize='none'
@@ -92,7 +93,7 @@ const loginPage = () => {
           <TextInput
             onChangeText={handleChange('password')}
             onBlur={handleBlur('password')}
-            placeholder='Password'
+            placeholder={i18n.t("password")}
             secureTextEntry={!showPassword} 
             style={styles.input}
             value={values.password}/>
@@ -108,7 +109,7 @@ const loginPage = () => {
               <Text style={styles.textError}>{errors.password}</Text>
             ) : null}
 
-        <Button title="Sign In" onPress={() => handleSubmit()}/>
+        <Button title={i18n.t("signIn")} onPress={() => handleSubmit()}/>
       </View>
       )}
       </Formik>
@@ -118,7 +119,7 @@ const loginPage = () => {
         <TouchableOpacity 
           onPress={() => router.push('/register')}
           style={styles.registerButton}>
-          <Text>Create new account</Text>
+          <Text>{i18n.t("createAccount")}</Text>
         </TouchableOpacity>
 
     </ScrollView>

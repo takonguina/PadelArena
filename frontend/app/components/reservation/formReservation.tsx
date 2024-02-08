@@ -12,38 +12,37 @@ import {
   } from 'react-native';
 import { Text, TextInput } from '../../theme/themed';
 import * as Yup from 'yup';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { router } from "expo-router";
 import { useAuth } from "../../../context/authContext";
 
-
-const ReservationSchema = Yup.object().shape({
-  reservationDate: Yup.string()
-    .required('Required'),
-  startTime: Yup.string()
-    .required('Required'),
-  endTime: Yup.string()
-    .required('Required')
-    .test('is-greater', 'Minimum 1 hour', function (endTime) {
-      const { startTime } = this.parent;
-
-      // Convert times to moment objects for easy comparison
-      const startMoment = moment(startTime, 'HH:mm');
-      const endMoment = moment(endTime, 'HH:mm');
-
-      // Check if endTime is after startParent with at least 1 hour difference
-      return  endMoment.isSameOrAfter(startMoment) && endMoment.diff(startMoment, 'hours') >= 1;
-    }),
-});
-
 const inputReservation = () => {
   const auth = useAuth();
-  const i18n = auth.i18n
+  const i18n = auth.i18n;
   const colorScheme = useColorScheme();
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = useState(false);
+
+  const ReservationSchema = Yup.object().shape({
+    reservationDate: Yup.string()
+      .required(i18n.t("required")),
+    startTime: Yup.string()
+      .required(i18n.t("required")),
+    endTime: Yup.string()
+      .required(i18n.t("required"))
+      .test('is-greater', i18n.t("minimumHour"), function (endTime) {
+        const { startTime } = this.parent;
+  
+        // Convert times to moment objects for easy comparison
+        const startMoment = moment(startTime, 'HH:mm');
+        const endMoment = moment(endTime, 'HH:mm');
+  
+        // Check if endTime is after startParent with at least 1 hour difference
+        return  endMoment.isSameOrAfter(startMoment) && endMoment.diff(startMoment, 'hours') >= 1;
+      }),
+  });
 
   const formatedTime = (time: Date, delay: number) => {
     time.setHours(time.getHours() + delay)
@@ -59,38 +58,38 @@ const inputReservation = () => {
 
   const onSubmit = async (data: any) => {
     const fixed_token = auth.token.replace(/['"]/g, '');
-    try{ 
-      const response = await axios.post(`${apiUrl}`,
-        {
-          'reservation_date': moment(date).format('MM/DD/YYYY'),
-          'start_time': moment(startTime).format('HH:mm'),
-          'end_time': moment(endTime).format('HH:mm')
-        },
-        {
-          params: {
-            'access_token': fixed_token
+      try{ 
+        const response = await axios.post(`${apiUrl}`,
+          {
+            'reservation_date': moment(date).format('MM/DD/YYYY'),
+            'start_time': moment(startTime).format('HH:mm'),
+            'end_time': moment(endTime).format('HH:mm')
           },
-          headers: {
-            'accept': 'application/json',
-            'Content-Type': 'application/json'
+          {
+            params: {
+              'access_token': fixed_token
+            },
+            headers: {
+              'accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
           }
+        );
+        if (response.status == 200){
+          Alert.alert(i18n.t("reservationConfirm"), i18n.t("reservationConfirmDetails"))
+          router.back();
         }
-      );
-      if (response.status == 200){
-        Alert.alert("Reservation confirmed! 🎾", "Make sure you're ready to play and enjoy your time on the court!")
-        router.back();
+      } catch(error){
+          if ((error as any).response?.status === 409) {
+            Alert.alert(i18n.t("reservationFailure"), i18n.t("reservationFailureDetails"))
+          } else {
+            Alert.alert(i18n.t("unexpectedError"))
+          }
       }
-    } catch(error){
-        if ((error as any).response?.status === 409) {
-          Alert.alert("Slot not available ⛔️", "Sorry, the time slot you selected is no longer available. Please choose another time slot. ")
-        } else {
-          Alert.alert("Unexpected error has occurred")
-        }
-    }
   };
 
   const onConfirm = (data: any) => { 
-    Alert.alert('Confirm Reservation', 'Please check the date and times', [
+    Alert.alert(i18n.t("confirmReservation"), i18n.t("confirmReservationDetails"), [
       {
         text: 'Cancel',
         style: 'destructive',
@@ -114,7 +113,7 @@ const inputReservation = () => {
         <DefaultView>
 
           <DefaultView style={styles.inputContainer}>
-            <Text style={styles.text}>Date</Text>
+            <Text style={styles.text}>{i18n.t("date")}</Text>
 
               <TextInput
               onPressIn={() => setShowDatePicker(true)}
@@ -141,7 +140,7 @@ const inputReservation = () => {
           />
 
           <DefaultView style={styles.inputContainer}>
-            <Text style={styles.text}>Start</Text>
+            <Text style={styles.text}>{i18n.t("start")}</Text>
             <TextInput
               onPressIn={()=> setShowStartTimePicker(true)}
               value={moment(startTime).format('HH:mm')}
@@ -167,7 +166,7 @@ const inputReservation = () => {
           />
 
           <DefaultView style={styles.inputContainer}>
-            <Text style={styles.text}>End</Text>
+            <Text style={styles.text}>{i18n.t("end")}</Text>
             <TextInput
               onPressIn={()=> setShowEndTimePicker(true)}
               value={moment(endTime).format('HH:mm')}
@@ -193,7 +192,7 @@ const inputReservation = () => {
           />
           
           <DefaultView style={styles.submitButton}>
-            <Button onPress={()=> handleSubmit()} title="Submit" />
+            <Button onPress={()=> handleSubmit()} title={i18n.t("submit")} />
           </DefaultView>        
         </DefaultView>
       )}

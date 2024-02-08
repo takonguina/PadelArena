@@ -8,8 +8,10 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { Text as TextThemed } from '../../theme/themed';
 import { useAuth } from '../../../context/authContext';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useFocusEffect } from 'expo-router';
+
+
 
 interface Reservation {
     id_court: number;
@@ -26,11 +28,13 @@ interface TimeComponentProps {
 }
 
 const DateComponent: React.FC<{ dateString: string }> = ({ dateString }) => {
-    const dateObject = new Date(dateString);
-    const month = dateObject.toLocaleString('en-ca', { month: 'short' });
-    const dayOfMonth = dateObject.getDate();
-    const dayOfWeek = dateObject.toLocaleString('en-ca', { weekday: 'short' });
-  
+  const auth = useAuth();
+  const i18n = auth.i18n;
+  const dateObject = new Date(dateString);
+  const month = dateObject.toLocaleString(i18n.locale, { month: 'short' });
+  const dayOfMonth = dateObject.getDate();
+  const dayOfWeek = dateObject.toLocaleString(i18n.locale, { weekday: 'short' });
+
     return (
       <DefaultView style={styles.dateContainer}>
         <TextThemed style={{fontWeight : "bold"}}>{month}</TextThemed>
@@ -64,6 +68,8 @@ const TimeComponent: React.FC<TimeComponentProps> = ({ startTimeString, endTimeS
   };
 
 const CourtComponent: React.FC<{ id_court: number }> = ({ id_court }) => {
+  const auth = useAuth();
+  const i18n = auth.i18n;
     return (
       <DefaultView style={{flexDirection : "row"}}>
         <MaterialCommunityIcons 
@@ -71,53 +77,54 @@ const CourtComponent: React.FC<{ id_court: number }> = ({ id_court }) => {
           size={20} 
           color="#008000"
         />
-        <TextThemed style={styles.text}>Court {id_court}</TextThemed>
+        <TextThemed style={styles.text}>{i18n.t("court")} {id_court}</TextThemed>
       </DefaultView>
     );
   };
 
 const currentReservation = () => {
-    const auth = useAuth();
-    const colorScheme = useColorScheme();
-    const backgroundColor = colorScheme === 'dark' ? '#333' : 'white';
-    const apiUrl = "http://192.168.1.63:3000/reservation/get_reservation/";
-    const [reservations, setReservations] = useState<Reservation[]>([]);
+  const auth = useAuth();
+  const i18n = auth.i18n;
+  const colorScheme = useColorScheme();
+  const backgroundColor = colorScheme === 'dark' ? '#333' : 'white';
+  const apiUrl = "http://192.168.1.63:3000/reservation/get_reservation/";
+  const [reservations, setReservations] = useState<Reservation[]>([]);
 
-    const onSubmit = async () => {
-        const fixed_token = auth.token.replace(/['"]/g, '');
-        try{ 
-          const response = await axios.post(`${apiUrl}`,'',
-            {
-                params: {
-                'access_token': fixed_token
-                },
-                headers: {
-                'accept': 'application/json',
-                'content-type': 'application/x-www-form-urlencoded'
-                }
-            });
-          if (response.status === 200){
-            setReservations(response.data.reservations)
-          }
-        } catch(error) {
-            if ((error as any).response?.status === 409) {
-              Alert.alert("Unexpected error has occurred")
-            }
+  const onSubmit = async () => {
+      const fixed_token = auth.token.replace(/['"]/g, '');
+      try{ 
+        const response = await axios.post(`${apiUrl}`,'',
+          {
+              params: {
+              'access_token': fixed_token
+              },
+              headers: {
+              'accept': 'application/json',
+              'content-type': 'application/x-www-form-urlencoded'
+              }
+          });
+        if (response.status === 200){
+          setReservations(response.data.reservations)
         }
-    };
+      } catch(error) {
+          if ((error as any).response?.status === 409) {
+            Alert.alert(i18n.t("unexpectedError"))
+          }
+      }
+  };
 
-    useFocusEffect(
-      useCallback(() => {
-      onSubmit();
-      }, [])
-    );
-      
+  useFocusEffect(
+    useCallback(() => {
+    onSubmit();
+    }, [])
+  );
+    
 
   return (
     <DefaultView style={{height: 470}}>
-        <TextThemed style={styles.reservation}>Reserved</TextThemed>
+        <TextThemed style={styles.reservation}>{i18n.t("reserved")}</TextThemed>
         {reservations.length === 0 ? (
-            <TextThemed style={styles.none}>No réservation.</TextThemed>
+            <TextThemed style={styles.none}>{i18n.t("noReservation")}</TextThemed>
         ) : (
             <FlatList
               style={styles.flatList}

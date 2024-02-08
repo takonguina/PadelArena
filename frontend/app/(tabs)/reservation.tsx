@@ -23,7 +23,7 @@ function FocusAwareStatusBar(props: any) {
 
 const reservation = () => {
   const auth = useAuth();
-  const i18n = auth.i18n
+  const i18n = auth.i18n;
   
   return (
     <DefaultView>
@@ -31,7 +31,7 @@ const reservation = () => {
       <Header/>
       <TextThemed style={styles.welcomeText}>{i18n.t('welcome')}, {auth.userData.first_name}</TextThemed>
       <DefaultView style={styles.buttonContainer}>
-        <TextThemed style={styles.reservation}>Add Reservation</TextThemed>
+        <TextThemed style={styles.reservation}>{i18n.t('addReservation')}</TextThemed>
         <TouchableOpacity onPress={()=> router.push("/newReservation")}>
           <MaterialCommunityIcons 
             name={'plus-circle'}

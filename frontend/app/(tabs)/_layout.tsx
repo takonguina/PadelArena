@@ -23,9 +23,9 @@ function TabBarIconFontAwesome(props: {
 }
 
 const _layout = () => {
-  const colorScheme = useColorScheme();
   const auth = useAuth();
-  const i18n = auth.i18n
+  const i18n = auth.i18n;
+  const colorScheme = useColorScheme();
 
   return (
     <Tabs

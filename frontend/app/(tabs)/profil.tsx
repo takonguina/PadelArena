@@ -3,9 +3,12 @@ import { View, Text } from "../theme/themed";
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useAuth } from '../../context/authContext';
 
 const ProfilScreen = () => {
   const router = useRouter();
+  const auth = useAuth();
+  const i18n = auth.i18n;
 
   return (
     <DefaultView style={styles.mainContainer}>
@@ -14,7 +17,7 @@ const ProfilScreen = () => {
 
         <View style={styles.settingsClass}>
           <Ionicons name="information" size={24} color="#aaa" />
-          <Text style={styles.textNavigation}>My information</Text>
+          <Text style={styles.textNavigation}>{i18n.t("myInformation")}</Text>
         </View>
       </TouchableOpacity>
     
@@ -24,7 +27,7 @@ const ProfilScreen = () => {
 
       <View style={styles.settingsClass}>
         <Ionicons name="lock-closed-sharp" size={24} color="#aaa" />
-        <Text style={styles.textNavigation}>Change Password</Text>
+        <Text style={styles.textNavigation}>{i18n.t("changePassword")}</Text>
       </View>
       </TouchableOpacity>
   </DefaultView>

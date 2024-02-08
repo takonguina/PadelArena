@@ -11,29 +11,31 @@ import * as Yup from 'yup';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 
-const SignupSchema = Yup.object().shape({
-  firstName: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Please enter full name'),
-  lastName: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Please enter full name'),
-  birth: Yup.string()
-    .required('Required'),
-  email: Yup.string()
-    .email('Invalid email')
-    .required('Please enter email adress'),
-});
 
 const myInformation = () => {
   const auth = useAuth();
+  const i18n = auth.i18n
   const colorScheme = useColorScheme();
   const [date, setDate] = useState(auth.userData.birthday);
   var formatedDate = moment(date).format('MMM DD YYYY');
   const [show, setShow] = useState(false);
   const apiUrl = "http://192.168.1.63:3000/users/change_infos/";
+
+  const SignupSchema = Yup.object().shape({
+    firstName: Yup.string()
+      .min(2, i18n.t("tooShort"))
+      .max(50, i18n.t("tooLong"))
+      .required(i18n.t("requiredName")),
+    lastName: Yup.string()
+      .min(2, i18n.t("tooShort"))
+      .max(50, i18n.t("tooLong"))
+      .required(i18n.t("requiredName")),
+    birth: Yup.string()
+      .required(i18n.t("required")),
+    email: Yup.string()
+      .email(i18n.t("invalidEmail"))
+      .required(i18n.t("requiredEmail")),
+  });
 
   const handleConfirm = (selectedDate : any) => {
     setDate(selectedDate);
@@ -58,11 +60,11 @@ const myInformation = () => {
           }
       });
       if (response.status === 200) {
-        Alert.alert("Informations have been successfully updated! ✅", "Don't forget to check your email address if you have updated it.")
+        Alert.alert(i18n.t("informationUpdated"), i18n.t("informationUpdatedDetails"))
         router.back();
       } 
     } catch(e) {
-      Alert.alert("Unexpected error", "Try later.")
+      Alert.alert(i18n.t("unexpectedError"), i18n.t("tryLater"))
     };
     
   };
@@ -71,7 +73,7 @@ const myInformation = () => {
     <SafeAreaView style={{ flex: 1 }}>
     <CustomKeyboardAvoidingView>
     <ScrollView style={styles.container}>
-      <Stack.Screen options={{headerTitle: "My information", headerBackTitle: "Profil"}} />
+      <Stack.Screen options={{headerTitle: i18n.t("myInformation"), headerBackTitle: i18n.t("profil")}} />
       
       <Formik
         initialValues={{
@@ -86,26 +88,26 @@ const myInformation = () => {
       {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
         <View>
           <View style={styles.inputContainer}>
-            <Text style={styles.text}>First Name</Text>
+            <Text style={styles.text}>{i18n.t("firstName")}</Text>
             <TextInput
               onChangeText={handleChange('firstName')}
               onBlur={handleBlur('firstName')}
               value={values.firstName}
               style={styles.input}
-              placeholder='First Name'
+              placeholder={i18n.t("firstName")}
             />
             {errors.firstName && touched.firstName ? (
                 <Text style={styles.textError}>{errors.firstName}</Text>
               ) : null}
           </View>
           <View style={styles.inputContainer}>
-            <Text style={styles.text}>Last Name</Text>
+            <Text style={styles.text}>{i18n.t("lastName")}</Text>
             <TextInput
               onChangeText={handleChange('lastName')}
               onBlur={handleBlur('lastName')}
               value={values.lastName}
               style={styles.input}
-              placeholder='Last Name'
+              placeholder={i18n.t("lastName")}
             />
             {errors.lastName && touched.lastName ? (
                 <Text style={styles.textError}>{errors.lastName}</Text>
@@ -113,7 +115,7 @@ const myInformation = () => {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.text}>Date of Birth</Text>
+            <Text style={styles.text}>{i18n.t("birthday")}</Text>
             <TextInput
               onPressIn={()=> setShow(true)}
               onChangeText={handleChange('birth')}
@@ -141,13 +143,13 @@ const myInformation = () => {
 
 
           <View style={styles.inputContainer}>
-            <Text style={styles.text}>Email</Text>
+            <Text style={styles.text}>{i18n.t("email")}</Text>
             <TextInput
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
               value={values.email}
               style={styles.input}
-              placeholder='Email'
+              placeholder={i18n.t("email")}
             />
             {errors.email && touched.email ? (
                 <Text style={styles.textError}>{errors.email}</Text>
@@ -157,7 +159,7 @@ const myInformation = () => {
 
     
           <View style={styles.submitButton}>
-            <Button onPress={()=> handleSubmit()} title="Submit" />
+            <Button onPress={()=> handleSubmit()} title={i18n.t("submit")}/>
           </View>        
         </View>
       )}

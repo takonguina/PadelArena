@@ -7,13 +7,14 @@ import { useAuth } from '../../context/authContext';
 
 const appSettings = () => {
     const auth = useAuth();
+    const i18n = auth.i18n;
 
 
   return (
     <View style={style.container}>
       <SwitchMode />
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-      <Button title="Logout" onPress={()=> auth.signOut()}/>
+      <Button title={i18n.t("logout")} onPress={()=> auth.signOut()}/>
     </View>
   )
 }

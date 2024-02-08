@@ -9,19 +9,21 @@ import { useState } from 'react';
 import { router } from 'expo-router';
 import { useAuth } from '../../../context/authContext';
 
-const changePasswordSchema = Yup.object().shape({
-    password: Yup.string()
-        .required('Please enter valid password')
-        .min(6),
-    confirmedPassword: Yup.string()
-        .required("Required")
-        .oneOf([Yup.ref("password")], "Passwords does not match"),
-});
 
 const changePassword = () => {
     const auth = useAuth();
+    const i18n = auth.i18n;
     const [showPassword, setShowPassword] = useState(false);
     const apiUrl = "http://192.168.1.63:3000/users/change_password/";
+
+    const changePasswordSchema = Yup.object().shape({
+      password: Yup.string()
+          .required(i18n.t("invalidPassword"))
+          .min(6),
+      confirmedPassword: Yup.string()
+          .required(i18n.t("required"))
+          .oneOf([Yup.ref("password")], i18n.t("passwordsNotMatch")),
+  });
 
     const toggleShowPassword = () => { 
         setShowPassword(!showPassword); 
@@ -42,18 +44,18 @@ const changePassword = () => {
                 }
             });
             if (response.status === 200) {
-              Alert.alert("Password have been successfully updated! ✅")
+              Alert.alert(i18n.t("passwordUpdated"))
               router.back();
             } 
           } catch(e) {
-            Alert.alert("Unexpected error", "Try later.")
+            Alert.alert(i18n.t("unexpectedError"), i18n.t("tryLater"))
           };
     };
 
 
   return (
     <View style={styles.container}>
-        <Stack.Screen options={{headerTitle: "Change Password", headerBackTitle: "Profil"}} />
+        <Stack.Screen options={{headerTitle: i18n.t("changePassword"), headerBackTitle: i18n.t("profil")}} />
 
         <Formik
         initialValues={{
@@ -66,7 +68,7 @@ const changePassword = () => {
       {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
         <View>
             <View style={styles.inputContainer}>
-                <Text style={styles.text}>Password</Text>
+                <Text style={styles.text}>{i18n.t("password")}</Text>
                 <View style={styles.maincontainer}> 
                 <TextInput
                     onChangeText={handleChange('password')}
@@ -74,7 +76,7 @@ const changePassword = () => {
                     value={values.password}
                     secureTextEntry={!showPassword} 
                     style={styles.input} 
-                    placeholder="Password"
+                    placeholder={i18n.t("password")}
                 /> 
                 <MaterialCommunityIcons 
                     name={showPassword ? 'eye' : 'eye-off'} 
@@ -90,7 +92,7 @@ const changePassword = () => {
             </View>
 
             <View style={styles.inputContainer}>
-                <Text style={styles.text}>Confirm Password</Text>
+                <Text style={styles.text}>{i18n.t("confirmPassword")}</Text>
                 <View style={styles.maincontainer}> 
                 <TextInput
                     onChangeText={handleChange('confirmedPassword')}
@@ -98,7 +100,7 @@ const changePassword = () => {
                     value={values.confirmedPassword}
                     secureTextEntry={!showPassword} 
                     style={styles.input} 
-                    placeholder="Confirm Password"
+                    placeholder={i18n.t("confirmPassword")}
                 /> 
                 <MaterialCommunityIcons 
                     name={showPassword ? 'eye' : 'eye-off'} 
@@ -114,7 +116,7 @@ const changePassword = () => {
             </View>
 
             <View style={styles.submitButton}>
-                <Button onPress={()=> handleSubmit()} title="Submit" />
+                <Button onPress={()=> handleSubmit()} title={i18n.t("submit")} />
             </View>        
         </View>
       )}
