@@ -26,7 +26,7 @@ The application is available in multiple languages for an optimal user experienc
 - 🇩🇪 German
 - 🇵🇹 Portuguese
 
-Thanks to the i18n library, you can use the application in the language of your choice!
+Thanks to the i18n library, you can use the application in the language based on your language's mobile.
 
 ## Work in Progress
 
