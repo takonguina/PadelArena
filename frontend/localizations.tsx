@@ -58,7 +58,9 @@ const translations = {
         start : "Start",
         end: "End",
         minimumHour: "Minimum 1 hour",
-        date: "Date"
+        date: "Date",
+        socialMedia: "Social Media",
+        phoneNumber : "Phone number"
     },
     fr: {
         locale: "fr-FR",
@@ -119,7 +121,9 @@ const translations = {
         start : "Début",
         end: "Fin",
         minimumHour: "Minimum 1 heure",
-        date: "Date"
+        date: "Date",
+        socialMedia: "Réseaux Sociaux",
+        phoneNumber : "Numéro de téléphone"
     },
     es: {
         locale: "es-ES",
@@ -180,7 +184,9 @@ const translations = {
         start : "Inicio",
         end: "Fin",
         minimumHour: "Mínimo 1 hora",
-        date: "Fecha"
+        date: "Fecha",
+        socialMedia: "Medios sociales",
+        phoneNumber : "Número de teléfono"
     },
     de: {
         locale: "de-DE",
@@ -241,7 +247,9 @@ const translations = {
         start : "Start",
         end: "Ende",
         minimumHour: "Mindestens 1 Stunde",
-        date: "Datum"
+        date: "Datum",
+        socialMedia: "Soziale Medien",
+        phoneNumber : "Telefonnummer"
     },
     pt: {
         locale: "pt-PT",
@@ -302,7 +310,9 @@ const translations = {
         start : "Início",
         end: "Fim",
         minimumHour: "Mínimo de 1 hora",
-        date: "Data"
+        date: "Data",
+        socialMedia: "Redes sociais",
+        phoneNumber : "Número de telefone"
     },
 }
 
