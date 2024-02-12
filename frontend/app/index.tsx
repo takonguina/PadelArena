@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { 
   ActivityIndicator, 
+  Alert,
   Appearance, 
   Dimensions, 
   View, 
@@ -18,6 +19,7 @@ function sleep(ms: number): Promise<void> {
 
 const index = () => {
   const auth = useAuth();
+  const i18n = auth.i18n;
   const apiURL = 'http://192.168.1.63:3000/users/user/';
 
   const getData = async () => {
@@ -48,8 +50,8 @@ const index = () => {
           router.replace("/home");
         }
     } catch (e) {
-        // router.replace('/login');
-        // Alert.alert("Connection Failure ⛔️", "Sorry, our service is not available or you do not have an internet connection.")
+        Alert.alert(i18n.t("connectionFailure"), i18n.t("connectionFailureDetails"));
+        router.replace('/login');
     }
   };
   
