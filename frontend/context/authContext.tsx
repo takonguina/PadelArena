@@ -19,10 +19,6 @@ type UserData = {
     date_insert: string;
   };
 
-function sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
 const AuthContext = createContext<any>(null);
 
 export function useAuth(){
@@ -38,28 +34,28 @@ export function AuthProvider({children}: React.PropsWithChildren){
 
     const rootSegment = useSegments()[0];
     const router = useRouter();
-    const [token, setToken] = useState<string | undefined>(undefined);
+    const [token, setToken] = useState<string | undefined>();
     const [userData, setUserData] = useState<UserData | undefined>(undefined);
     const apiURL = 'http://192.168.1.63:3000/users/user/';
-
-    const storeData = async (new_token: string) => {
-        try {
-            await AsyncStorage.setItem('token', new_token)
-        } catch (e) {
-            // saving error
-        }
-    };
 
     const getData = async () => {
         try {
             const storedToken = await AsyncStorage.getItem('token');
             if (storedToken === null) {
-                return
+                setToken(undefined);
             } else {
                 setToken(storedToken);
             }
             
         } catch (e){
+            // saving error
+        }
+      };
+
+    const storeData = async (new_token: string) => {
+        try {
+            await AsyncStorage.setItem('token', new_token)
+        } catch (e) {
             // saving error
         }
     };
@@ -71,46 +67,27 @@ export function AuthProvider({children}: React.PropsWithChildren){
             // saving error
         }
     }
-
     const handleUser = async (token: string) => {
         try {
             const fixed_token = token.replace(/['"]/g, '');
-            const response = await axios.post(`${apiURL}?token=${fixed_token}`, {
+            const response = await axios.post(`${apiURL}?token=${fixed_token}`,{}, {
                 headers: {
                     'accept': 'application/json',
                     'Content-Type': 'application/json'
                 }
             });
-            if (response.status === 200)
-                setUserData(response.data[0]);
+            if (response.status === 200) {
+              setUserData(response.data[0]);
+            }
         } catch (e) {
-            router.replace('/login');
-            Alert.alert("Connection Failure ⛔️", "Sorry, our service is not available or you do not have an internet connection.")
+            // router.replace('/login');
+            // Alert.alert("Connection Failure ⛔️", "Sorry, our service is not available or you do not have an internet connection.")
         }
-    };
+      };
 
     useEffect(()=> {
-        const waitandRedirect = async () => {
-            if (token === undefined) {
-                getData();
-            } else {
-                handleUser(token)
-            }
-
-            if (rootSegment == undefined){
-                await sleep(2000);
-            }
-
-            if (!token && (rootSegment == "(tabs)" || rootSegment == "(modal)")){
-                router.replace('/login');
-            } else if (token && (rootSegment == "(auth)" || rootSegment == undefined)){
-                router.replace('/home');
-            } else if (!token && rootSegment == undefined){
-                router.replace('/login');
-            }
-    }
-    waitandRedirect();
-    }, [token, rootSegment])
+        getData();
+    });
 
     return (
         <AuthContext.Provider
@@ -118,14 +95,21 @@ export function AuthProvider({children}: React.PropsWithChildren){
                 locale: locale,
                 i18n: i18n,
                 token: token,
+                setToken: (storedToken: string) => {
+                    setToken(storedToken)
+                },
                 userData: userData,
+                setUserData : (userData: UserData) => {
+                    setUserData(userData)
+                },
                 signIn: (login_token: string) => {
                     setToken(login_token);
                     storeData(login_token);
+                    handleUser(login_token);
                 },
                 signOut: () => {
-                    setToken("");
                     removeData();
+                    router.replace("/login");
                 }
             }}>
         {children}

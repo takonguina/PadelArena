@@ -42,7 +42,8 @@ const loginPage = () => {
           }
         })
         if (response.status === 200) {
-          auth.signIn(JSON.stringify(response.data.access_token))
+          auth.signIn(JSON.stringify(response.data.access_token));
+          router.replace("/home");
         }
         } catch (error) {
           if ((error as AxiosError).response?.status === 404) {

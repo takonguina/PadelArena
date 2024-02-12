@@ -1,6 +1,5 @@
 from datetime import datetime, time
 
-from sqlalchemy import and_, cast, func, or_, Time
 from sqlalchemy.orm import Session
 
 from . import models, schemas
@@ -27,7 +26,11 @@ def check_email(db: Session, data: schemas.UserLogin):
     return db.query(models.Users).filter(models.Users.email == data.email).first()
 
 def get_user_by_id(db: Session, user_id: int):
-    return db.query(models.Users).filter(models.Users.id_user == user_id).first()
+    return db.query(models.Users.first_name, 
+                    models.Users.last_name,
+                    models.Users.birthday,
+                    models.Users.email,
+                    models.Users.email_validated).filter(models.Users.id_user == user_id).first()
 
 def change_user_infos(db: Session, user_info: schemas.UserInfos, user_id: int):
     user = db.query(models.Users).filter(models.Users.id_user == user_id).first()
